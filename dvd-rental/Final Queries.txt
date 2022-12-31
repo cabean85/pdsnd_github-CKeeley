@@ -1,0 +1,53 @@
+Question 1: Create a query that lists the film category it is classified in, the rating,  and the number of times it has been rented out
+
+SELECT title, rating, name, COUNT(rental_id)
+FROM film_category
+JOIN film
+ON film.film_id = film_category.film_id
+JOIN inventory 
+ON inventory.film_id = film.film_id
+JOIN rental
+ON rental.inventory_id = inventory.inventory_id
+JOIN category
+ON category.category_id = film_category.category_id
+GROUP BY title, rating, name
+ORDER BY name, rating, title
+
+Question 2: Determine the Total and Average Spent on Rentals a Month
+
+SELECT rental.rental_id, payment.payment_id, payment.amount, date_trunc('month', payment.payment_date), AVG(payment.amount) OVER(partition by date_trunc('month', payment_date) order by payment.payment_date) as avg_month_payment
+FROM rental
+JOIN payment 
+ON rental.rental_id = payment.rental_id
+ORDER BY payment.payment_date asc
+
+
+Question 3: Determine the Movie Category that was Rented Out the Most 
+
+SELECT CONCAT(customer.first_name, ' ', customer.last_name) as cust_name, category.name, 
+COUNT(category.name) as number_rentals from category
+INNER JOIN film_category on category.category_id = film_category.category_id
+INNER JOIN film on film_category.film_id = film.film_id
+INNER JOIN inventory on film.film_id = inventory.film_id
+INNER JOIN rental on inventory.inventory_id = rental.inventory_id
+INNER JOIN customer on rental.customer_id = customer.customer_id
+WHERE category.name = (
+	SELECT cat.name from category as cat
+	INNER JOIN film_category as fc on cat.category_id = fc.category_id
+	INNER JOIN film as f on fc.film_id = f.film_id
+	INNER JOIN inventory as inv on f.film_id = inv.film_id
+	INNER JOIN rental as rent on inv.inventory_id = rent.inventory_id
+	GROUP BY cat.name
+	ORDER BY count(cat.name) desc limit 1)
+GROUP BY cust_name, category.name
+ORDER BY cust_name
+
+Question 4: Compare the rental numbers for 2 stores for the year 2005-2006
+
+SELECT DATE_PART('YEAR', rental_date) YEARs, store.store_id, DATE_PART('MONTH', rental_date) Months, COUNT(*)
+FROM rental
+INNER JOIN payment ON payment.rental_id = rental.rental_id
+INNER JOIN staff on staff.staff_id = payment.staff_id
+INNER JOIN store on store.store_id = staff.store_id
+Group BY store.store_id, rental_date
+ORDER by count desc
