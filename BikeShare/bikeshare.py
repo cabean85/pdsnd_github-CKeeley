@@ -25,7 +25,7 @@ def get_filters():
     while True:
         city=input("What city are looking to filter by:\n Chicago, New York City, Washington\n")
         if city not in ('Chicago', 'New York City', 'Washington'):
-            print("Oops! Your selection is not valid. Please try again.")
+            print("You haven't selected a valid City. Please try again.")
             continue
         else:
             break
@@ -35,7 +35,7 @@ def get_filters():
     while True:
         month=input("Month needed to filter by:\n January, February, March, April, May, June, type 'All' for no filtered month\n")
         if month not in ('January', 'February', 'March', 'April', 'May', 'June', 'All'):
-            print("Oops! Please select a valid month fitler.")
+            print("You haven't selected a valid Month. Please try again.")
             continue
         else:
             break
@@ -45,7 +45,7 @@ def get_filters():
     while True:
         day=input("What day would you like to see:\n Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, type 'All' \n")
         if day not in ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'All'):
-            print("Oops! Please select a valid day of the week.")
+            print("You haven't selected a valid Day of the Week. Please try again.  Oops!")
             continue
         else:
             break
